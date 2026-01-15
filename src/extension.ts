@@ -7,6 +7,11 @@ export function activate(context: vscode.ExtensionContext) {
 	const workspaceLabel = new WorkspaceLabel()
 
 	context.subscriptions.push(workspaceLabel)
+	context.subscriptions.push(
+		workspace.onDidChangeWorkspaceFolders(() => {
+			workspaceLabel.refresh()
+		})
+	)
 }
 
 // this method is called when your extension is deactivated
@@ -28,6 +33,11 @@ export class WorkspaceLabel {
 			this.statusBarItem.text = `[ ${this.workspaceFolderName[0].name} ]`
 			this.statusBarItem.show()
 		}
+	}
+
+	refresh() {
+		this.workspaceFolderName = workspace.workspaceFolders
+		this.updateWorkSpaceLabel()
 	}
 
 	dispose() {
